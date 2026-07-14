@@ -4,6 +4,7 @@ import type { Elemento } from "./types/Elemento";
 import Buscador from "./components/Buscador";
 import ListaElementos from "./components/ListaElementos";
 import Favoritos from "./components/Favoritos";
+import "./App.css";
 
 const URL_API = "https://dragonball-api.com/api/characters";
 

@@ -7,7 +7,7 @@ interface Props {
 
 export default function ElementoCard({ elemento, onAgregarFavorito }: Props) {
   return (
-    <div>
+    <div className="card">
       <img src={elemento.imagen} alt={elemento.nombre} />
       <h3>{elemento.nombre}</h3>
       <p>Raza: {elemento.categoria}</p>
