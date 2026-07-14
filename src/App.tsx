@@ -15,30 +15,39 @@ function App() {
   const [busqueda, setBusqueda] = useState("");
   const [favoritos, setFavoritos] = useState<Elemento[]>([]);
 
+  const fetchPersonajes = async (query = "") => {
+    try {
+      setCargando(true);
+      setError("");
+      const url = query ? `${URL_API}?name=${encodeURIComponent(query)}` : URL_API;
+      const data = await cargarDatos(url);
+      const transformados: Elemento[] = (data as any[]).map((item: any) => ({
+        id: item.id,
+        nombre: item.name,
+        imagen: item.image,
+        categoria: item.race,
+        estado: item.ki,
+      }));
+
+      setDatos(transformados);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error inesperado");
+    } finally {
+      setCargando(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setCargando(true);
-        setError("");
-        const data = await cargarDatos(URL_API);
-        const transformados: Elemento[] = data.items.map((item: any) => ({
-          id: item.id,
-          nombre: item.name,
-          imagen: item.image,
-          categoria: item.race,
-          estado: item.ki,
-        }));
-
-        setDatos(transformados);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Error inesperado");
-      } finally {
-        setCargando(false);
-      }
-    };
-
-    fetchData();
+    fetchPersonajes();
   }, []);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      fetchPersonajes(busqueda.trim());
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [busqueda]);
 
   useEffect(() => {
     const guardados = localStorage.getItem("favoritos");
